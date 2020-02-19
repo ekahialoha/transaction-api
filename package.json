@@ -1,0 +1,11 @@
+{
+  "name": "transaction-api",
+  "version": "0.1",
+  "main": "index.js",
+  "repository": "git@github.com:ekahialoha/transaction-api.git",
+  "author": "Christian Kelsom-Martin <christian.kelsommartin@gmail.com>",
+  "license": "TBD",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
