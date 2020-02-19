@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
     type: DataTypes.INTEGER
   }, {});
   Registry.associate = models => {
-    Registry.belongsTo(models.User, {
+    models.Registry.belongsTo(models.User, {
       foreignKey: 'id'
     });
   };
