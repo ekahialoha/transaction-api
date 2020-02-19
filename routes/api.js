@@ -44,6 +44,4 @@ router.put('/users/:id', (req, res) => {
   }).then(() => res.json({ updated: true }));
 });
 
-
-
 module.exports = router;
