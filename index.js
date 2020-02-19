@@ -5,6 +5,7 @@ const dotEnv = require('dotenv').config();
 const express = require('express');
 const sequelize = require('sequelize');
 const routes = require('./routes/api.js');
+const apiRoutes = require('./routes/api.js');
 
 // ====================
 // Simple application
@@ -21,6 +22,7 @@ const db = new sequelize(process.env.DATABASE_URI);
 // Routes
 // #########
 routes(app, db);
+app.use('/api', apiRoutes);
 
 // ##################
 // Start up server
