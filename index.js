@@ -1,14 +1,21 @@
 // ==========================
 // Application Dependencies
 // ==========================
-require('dotenv').config();
+const dotEnv = require('dotenv').config();
 const express = require('express');
+const sequelize = require('sequelize');
 
 // ====================
 // Simple application
 // ====================
 const app = express();
-const port = 3000;
+console.log(dotEnv);
+const port = dotEnv.parsed.PORT;
+
+// =====================
+// Database Connection
+// =====================
+const dbConnection = new sequelize();
 
 
 app.get('/', (req, res) => res.send('Hello :)'));
