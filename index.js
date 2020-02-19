@@ -9,13 +9,15 @@ const sequelize = require('sequelize');
 // Simple application
 // ====================
 const app = express();
-console.log(dotEnv);
-const port = dotEnv.parsed.PORT;
+const port = process.env.PORT || 3000;
 
 // =====================
 // Database Connection
 // =====================
-const dbConnection = new sequelize();
+const db = new sequelize(process.env.DATABASE_URI);
+db.authenticate()
+  .then(() => console.log('Postgres/Sequelize connection successfull.'))
+  .catch(() => console.log('Unable to establish Postgres/Sequelize connection.'));
 
 
 app.get('/', (req, res) => res.send('Hello :)'));
