@@ -1,9 +1,10 @@
-// ==========================
-// Application Dependencies
-// ==========================
+// ===================================
+// Application Dependencies/Includes
+// ===================================
 const dotEnv = require('dotenv').config();
 const express = require('express');
 const sequelize = require('sequelize');
+const routes = require('./routes/api.js');
 
 // ====================
 // Simple application
@@ -16,7 +17,10 @@ const port = process.env.PORT || 3000;
 // =====================
 const db = new sequelize(process.env.DATABASE_URI);
 
-app.get('/', (req, res) => res.send('Hello :)'));
+// #########
+// Routes
+// #########
+routes(app, db);
 
 // ##################
 // Start up server
