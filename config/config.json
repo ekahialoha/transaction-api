@@ -1,0 +1,29 @@
+{
+  "development": {
+    "username": null,
+    "password": null,
+    "database": "transaction_app_development",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres",
+    "operatorsAliases": 1
+  },
+  "test": {
+    "username": null,
+    "password": null,
+    "database": "transaction_app_test",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres",
+    "operatorsAliases": 1
+  },
+  "production": {
+    "username": null,
+    "password": null,
+    "database": "transaction_app_production",
+    "host": "localhost",
+    "port": 5432,
+    "dialect": "postgres",
+    "operatorsAliases": 1
+  }
+}
