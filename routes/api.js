@@ -83,4 +83,45 @@ router.put('/registries/:id', (req, res) => {
   }).then(() => res.json({ update: true }));
 });
 
+// =====================================
+// Setup routes for /api/transactions
+// =====================================
+router.get('/transactions', (req, res) => {
+  db.Transaction.findAll().then(transactions => res.json(transactions));
+});
+
+router.post('/transactions', (req, res) => {
+  db.Transaction.create({
+    description: req.body.transaction.description,
+    userId: req.body.transaction.userId,
+    registryId: req.body.transaction.registryId,
+    type: req.body.transaction.type,
+    value: req.body.transaction.value
+  }).then(transaction => res.json(transaction));
+});
+
+router.get('/transactions/:id', (req, res) => {
+  db.Transaction.findAll({
+    where: {
+      id: req.params.id
+    }
+  }).then(transaction => res.json(transaction));
+});
+
+router.delete('/transactions/:id', (req, res) => {
+  db.Transaction.destroy({
+    where: {
+      id: req.params.id
+    }
+  }).then(() => res.json({ deleted: true }));
+});
+
+router.put('/transactions/:id', (req, res) => {
+  db.Transaction.update(req.body.transaction, {
+    where: {
+      id: req.params.id
+    }
+  }).then(() => res.json({ updated: true }));
+});
+
 module.exports = router;
