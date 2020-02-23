@@ -9,7 +9,7 @@ const db = require('../models');
 // Setup routes for /api/users
 // =============================
 router.get('/users', (req, res) => {
-  db.User.findAll().then(users => res.json(users));
+  db.User.findAll().then(users => res.json(users)).catch(error => res.json(error));
 });
 
 router.post('/users', (req, res) => {
@@ -17,7 +17,7 @@ router.post('/users', (req, res) => {
     name: req.body.user.name,
     email: req.body.user.email,
     password: req.body.user.password
-  }).then(user => res.json(user));
+  }).then(user => res.json(user)).catch(error => res.json(error));
 });
 
 router.get('/users/:id', (req, res) => {
@@ -25,7 +25,7 @@ router.get('/users/:id', (req, res) => {
     where: {
       id: req.params.id
     }
-  }).then(user => res.json(user));
+  }).then(user => res.json(user)).catch(error => res.json(error));
 });
 
 router.delete('/users/:id', (req, res) => {
@@ -33,7 +33,7 @@ router.delete('/users/:id', (req, res) => {
     where: {
       id: req.params.id
     }
-  }).then(() => res.json({ deleted: true }));
+  }).then(() => res.json({ deleted: true })).catch(error => res.json(error));
 });
 
 router.put('/users/:id', (req, res) => {
@@ -41,14 +41,14 @@ router.put('/users/:id', (req, res) => {
     where: {
       id: req.params.id
     }
-  }).then(() => res.json({ updated: true }));
+  }).then(() => res.json({ updated: true })).catch(error => res.json(error));
 });
 
 // ==================================
 // Setup routes for /api/registries
 // ==================================
 router.get('/registries', (req, res) => {
-  db.Registry.findAll().then(registries => res.json(registries));
+  db.Registry.findAll().then(registries => res.json(registries)).catch(error => res.json(error));
 });
 
 router.post('/registries', (req, res) => {
@@ -56,7 +56,7 @@ router.post('/registries', (req, res) => {
     name: req.body.registry.name,
     userId: req.body.registry.userId,
     type: req.body.registry.type
-  }).then(registry => res.json(registry));
+  }).then(registry => res.json(registry)).catch(error => res.json(error));
 });
 
 router.get('/registries/:id', (req, res) => {
@@ -64,7 +64,7 @@ router.get('/registries/:id', (req, res) => {
     where: {
       id: req.params.id
     }
-  }).then(registry => res.json(registry));
+  }).then(registry => res.json(registry)).catch(error => res.json(error));
 });
 
 router.delete('/registries/:id', (req, res) => {
@@ -72,7 +72,7 @@ router.delete('/registries/:id', (req, res) => {
     where: {
       id: req.params.id
     }
-  }).then(() => res.json({ deleted:true }));
+  }).then(() => res.json({ deleted:true })).catch(error => res.json(error));
 });
 
 router.put('/registries/:id', (req, res) => {
@@ -80,14 +80,16 @@ router.put('/registries/:id', (req, res) => {
     where: {
       id: req.params.id
     }
-  }).then(() => res.json({ update: true }));
+  }).then(() => res.json({ update: true })).catch(error => res.json(error));
 });
 
 // =====================================
 // Setup routes for /api/transactions
 // =====================================
 router.get('/transactions', (req, res) => {
-  db.Transaction.findAll().then(transactions => res.json(transactions));
+  db.Transaction.findAll()
+    .then(transactions => res.json(transactions))
+    .catch(error => res.json(error));
 });
 
 router.post('/transactions', (req, res) => {
@@ -97,7 +99,7 @@ router.post('/transactions', (req, res) => {
     registryId: req.body.transaction.registryId,
     type: req.body.transaction.type,
     value: req.body.transaction.value
-  }).then(transaction => res.json(transaction));
+  }).then(transaction => res.json(transaction)).catch(error => res.json(error));
 });
 
 router.get('/transactions/:id', (req, res) => {
@@ -105,7 +107,7 @@ router.get('/transactions/:id', (req, res) => {
     where: {
       id: req.params.id
     }
-  }).then(transaction => res.json(transaction));
+  }).then(transaction => res.json(transaction)).catch(error => res.json(error));
 });
 
 router.delete('/transactions/:id', (req, res) => {
@@ -113,7 +115,7 @@ router.delete('/transactions/:id', (req, res) => {
     where: {
       id: req.params.id
     }
-  }).then(() => res.json({ deleted: true }));
+  }).then(() => res.json({ deleted: true })).catch(error => res.json(error));
 });
 
 router.put('/transactions/:id', (req, res) => {
@@ -121,7 +123,7 @@ router.put('/transactions/:id', (req, res) => {
     where: {
       id: req.params.id
     }
-  }).then(() => res.json({ updated: true }));
+  }).then(() => res.json({ updated: true })).catch(error => res.json(error));
 });
 
 module.exports = router;
