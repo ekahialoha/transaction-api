@@ -5,9 +5,9 @@ const express = require('express');
 const router = express.Router();
 const db = require('../models');
 
-// ========================
-// Setup routes for /api
-// ========================
+// =============================
+// Setup routes for /api/users
+// =============================
 router.get('/users', (req, res) => {
   db.User.findAll().then(users => res.json(users));
 });
@@ -44,6 +44,9 @@ router.put('/users/:id', (req, res) => {
   }).then(() => res.json({ updated: true }));
 });
 
+// ==================================
+// Setup routes for /api/registries
+// ==================================
 router.get('/registries', (req, res) => {
   db.Registry.findAll().then(registries => res.json(registries));
 });
@@ -51,7 +54,7 @@ router.get('/registries', (req, res) => {
 router.post('/registries', (req, res) => {
   db.Registry.create({
     name: req.body.registry.name,
-    user_id: req.body.registry.user_id,
+    userId: req.body.registry.userId,
     type: req.body.registry.type
   }).then(registry => res.json(registry));
 });

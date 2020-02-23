@@ -2,7 +2,7 @@
 module.exports = (sequelize, DataTypes) => {
   const Registry = sequelize.define('Registry', {
     name: DataTypes.STRING,
-    user_id: DataTypes.INTEGER,
+    userId: DataTypes.INTEGER,
     type: DataTypes.INTEGER
   }, {});
   Registry.associate = models => {

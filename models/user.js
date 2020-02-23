@@ -19,7 +19,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   User.associate = models => {
     models.User.hasMany(models.Registry, {
-      foreignKey: 'user_id'
+      foreignKey: 'userId'
     });
   };
   return User;
