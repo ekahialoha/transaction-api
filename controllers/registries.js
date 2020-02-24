@@ -58,9 +58,10 @@ module.exports = {
         }
 
         result.update(req.body.registry)
-          .then(() => {
-            resJson(res,{
-                update: true
+          .then(updated => {
+            resJson(res, {
+                update: true,
+                updated: updated
             });
           })
           .catch(error => resJson(error));
