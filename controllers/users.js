@@ -64,7 +64,7 @@ module.exports = {
               data: updated
             });
           })
-          .catch(error => resJson(error));
+          .catch(error => resJson(res, null, 422, error));
       });
     }
   }
