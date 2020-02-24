@@ -1,36 +1,33 @@
 const db = require('../models');
 
-const fetchRegistry = async (id) => {
-  let registry = await db.Registry.findByPk(id);
-
-  if (registry === null) {
-    return { error: 'not found'};
-  } else {
-    return registry;
-  }
-}
+const fetchRegistry = require('../helpers/fetch_registry.js');
+const resJson = require('../helpers/res_send.js');
 
 module.exports = {
   Registries: {
     findAll: (req, res) => {
         db.Registry.findAll()
-          .then(registries => res.json(registries))
-          .catch(error => res.json(error));
+          .then(registries => resJson(res, registries))
+          .catch(error => resJson(res, null, 500, error));
     },
 
     create: (req, res) => {
+      const registry = req.body.registry;
+
       db.Registry.create({
-        name: req.body.registry.name,
-        userId: req.body.registry.userId,
-        type: req.body.registry.type
-      }).then(registry => res.json(registry)).catch(error => res.json(error));
+        name: registry.name,
+        userId: registry.userId,
+        type: registry.type
+      })
+        .then(result => resJson(res, result))
+        .catch(error => resJson(res, null, 500, error));
     },
 
     findOne: (req, res) => {
       const registry = fetchRegistry(req.params.id);
 
       registry.then(result => {
-        res.json(result)
+        resJson(res, result, 200, 'Not Found');
       });
     },
 
@@ -38,11 +35,17 @@ module.exports = {
       const registry = fetchRegistry(req.params.id);
 
       registry.then(result => {
-        if (result.error !== undefined) return res.json(result);
+        if (result === null) {
+          return resJson(res, result, 404, 'Not Found');
+        }
 
         result.destroy()
-          .then(() => res.json({ deleted:true }))
-          .catch(error => res.json(error));
+          .then(() => {
+            resJson(res, {
+              deleted: true
+            });
+          })
+          .catch(error => resJson(res, null, 500, error));
       });
     },
 
@@ -50,11 +53,17 @@ module.exports = {
       const registry = fetchRegistry(req.params.id);
 
       registry.then(result => {
-        if (result.error !== undefined) return res.json(result);
+        if (result === null) {
+          return resJson(res, result, 404, 'Not Found');
+        }
 
         result.update(req.body.registry)
-          .then(() => res.json({ update: true }))
-          .catch(error => res.json(error));
+          .then(() => {
+            resJson(res,{
+                update: true
+            });
+          })
+          .catch(error => resJson(error));
       });
 
     }
