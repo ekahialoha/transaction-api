@@ -61,12 +61,11 @@ module.exports = {
           .then(updated => {
             resJson(res, {
                 update: true,
-                updated: updated
+                data: updated
             });
           })
           .catch(error => resJson(error));
       });
-
     }
   }
 };
