@@ -1,7 +1,16 @@
 const db = require('../models');
 
-const fetchUser = async id => {
-  const user = await db.User.findByPk(id);
+const fetchUser = (id, searchBy = 'id') => {
+  let user;
+  if (searchBy === 'id') {
+    user = db.User.findByPk(id);
+  } else {
+    user = db.User.findOne({
+      where: {
+        email: id
+      }
+    });
+  }
   return user;
 }
 
