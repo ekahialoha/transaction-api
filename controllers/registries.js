@@ -1,7 +1,7 @@
 const db = require('../models');
 
 const fetchRegistry = require('../helpers/fetch_registry.js');
-const resJson = require('../helpers/res_send.js');
+const resJson = require('../helpers/res_json.js');
 
 module.exports = {
   Registries: {
