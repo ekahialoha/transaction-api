@@ -1,9 +1,21 @@
 const db = require('../models');
 
+const fetchRegistry = async (id) => {
+  let registry = await db.Registry.findByPk(id);
+
+  if (registry === null) {
+    return { error: 'not found'};
+  } else {
+    return registry;
+  }
+}
+
 module.exports = {
   Registries: {
     findAll: (req, res) => {
-      db.Registry.findAll().then(registries => res.json(registries)).catch(error => res.json(error));
+        db.Registry.findAll()
+          .then(registries => res.json(registries))
+          .catch(error => res.json(error));
     },
 
     create: (req, res) => {
@@ -15,27 +27,36 @@ module.exports = {
     },
 
     findOne: (req, res) => {
-      db.Registry.findOne({
-        where: {
-          id: req.params.id
-        }
-      }).then(registry => res.json(registry)).catch(error => res.json(error));
+      const registry = fetchRegistry(req.params.id);
+
+      registry.then(result => {
+        res.json(result)
+      });
     },
 
     delete: (req, res) => {
-      db.Registry.destroy({
-        where: {
-          id: req.params.id
-        }
-      }).then(() => res.json({ deleted:true })).catch(error => res.json(error));
+      const registry = fetchRegistry(req.params.id);
+
+      registry.then(result => {
+        if (result.error !== undefined) return res.json(result);
+
+        result.destroy()
+          .then(() => res.json({ deleted:true }))
+          .catch(error => res.json(error));
+      });
     },
 
     update: (req, res) => {
-      db.Registry.update(req.body.registry, {
-        where: {
-          id: req.params.id
-        }
-      }).then(() => res.json({ update: true })).catch(error => res.json(error));
+      const registry = fetchRegistry(req.params.id);
+
+      registry.then(result => {
+        if (result.error !== undefined) return res.json(result);
+
+        result.update(req.body.registry)
+          .then(() => res.json({ update: true }))
+          .catch(error => res.json(error));
+      });
+
     }
   }
 };
