@@ -1,45 +1,73 @@
 const db = require('../models');
 
+const fetchTransaction = require('../helpers/fetch_transaction');
+const resJson = require('../helpers/res_json');
+
 module.exports = {
   Transactions: {
     findAll: (req, res) => {
       db.Transaction.findAll()
-        .then(transactions => res.json(transactions))
-        .catch(error => res.json(error));
+        .then(transactions => resJson(res, transactions))
+        .catch(error => resJson(res, null, 500, error));
     },
 
     create: (req, res) => {
+      const transaction = req.body.transaction;
+
       db.Transaction.create({
-        description: req.body.transaction.description,
-        userId: req.body.transaction.userId,
-        registryId: req.body.transaction.registryId,
-        type: req.body.transaction.type,
-        value: req.body.transaction.value
-      }).then(transaction => res.json(transaction)).catch(error => res.json(error));
+        description: transaction.description,
+        userId: transaction.userId,
+        registryId: transaction.registryId,
+        type: transaction.type,
+        value: transaction.value
+      })
+        .then(transaction => resJson(res, transaction))
+        .catch(error => resJson(res, null, 422, error));
     },
 
     findOne: (req, res) => {
-      db.Transaction.findOne({
-        where: {
-          id: req.params.id
-        }
-      }).then(transaction => res.json(transaction)).catch(error => res.json(error));
+      const transaction = fetchTransaction(req.params.id);
+
+      transaction.then(result => {
+        resJson(res, result, 200, 'Not Found');
+      });
     },
 
     delete: (req, res) => {
-      db.Transaction.destroy({
-        where: {
-          id: req.params.id
+      const transaction = fetchTransaction(req.params.id);
+
+      transaction.then(result => {
+        if (result === null) {
+          return resJson(res, result, 404, 'Not Found');
         }
-      }).then(() => res.json({ deleted: true })).catch(error => res.json(error));
+
+        result.destroy()
+          .then(() => {
+            resJson(res, {
+              deleted: true
+            });
+          })
+          .catch(error => resJson(res, null, 500, error));
+      });
     },
 
     update: (req, res) => {
-      db.Transaction.update(req.body.transaction, {
-        where: {
-          id: req.params.id
+      const transaction = fetchTransaction(req.params.id);
+
+      transaction.then(result => {
+        if (result === null) {
+          return resJson(res, result, 404, 'Not Found');
         }
-      }).then(() => res.json({ updated: true })).catch(error => res.json(error));
+
+        result.update(req.body.transaction)
+          .then(updated => {
+            resJson(res, {
+              updated: true,
+              data: updated
+            });
+          })
+          .catch(error => resJson(res, null, 422, error));
+      });
     }
   }
 };
