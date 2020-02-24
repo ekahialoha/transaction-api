@@ -30,13 +30,22 @@ module.exports = (sequelize, DataTypes) => {
       }
     }
   });
+
   User.associate = models => {
     models.User.hasMany(models.Registry, {
       foreignKey: 'userId'
     });
   };
+
   User.prototype.validatePassword = async function(password) {
     return await bcrypt.compare(password, this.password);
   };
+
+  User.prototype.toJSON = function() {
+    const user = Object.assign({}, this.get());
+    delete user.password;
+    return user;
+  };
+
   return User;
 };
