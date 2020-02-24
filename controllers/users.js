@@ -1,7 +1,7 @@
 const db = require('../models');
 
-const fetchUser = require('../helpers/fetch_user.js');
-const resJson = require('../helpers/res_json.js');
+const fetchUser = require('../helpers/fetch_user');
+const resJson = require('../helpers/res_json');
 
 module.exports = {
   Users: {

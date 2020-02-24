@@ -1,6 +1,15 @@
 'use strict';
 const bcrypt = require('bcrypt');
 
+const hashPassword = async (user) => {
+  try {
+    const hashedPassword = await bcrypt.hash(user.password, 10);
+    user.password = hashedPassword;
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     name: {
@@ -20,14 +29,8 @@ module.exports = (sequelize, DataTypes) => {
     },
   }, {
     hooks: {
-      beforeCreate: async user => {
-        try {
-          const hashedPassword = await bcrypt.hash(user.password, 10);
-          user.password = hashedPassword;
-        } catch (e) {
-          console.log(e);
-        }
-      }
+      beforeCreate: hashPassword,
+      beforeUpdate: hashPassword
     }
   });
 
