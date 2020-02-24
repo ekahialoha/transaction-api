@@ -4,7 +4,10 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models');
-const controllers = require('../controllers')
+const controllers = require('../controllers');
+const middleware = require('../middleware');
+
+console.log(middleware);
 
 // =============================
 // Setup routes for /api/users
@@ -24,7 +27,7 @@ router.post('/sessions', controllers.Sessions.create);
 // ==================================
 // Setup routes for /api/registries
 // ==================================
-router.get('/registries', controllers.Registries.findAll);
+router.get('/registries', middleware.checkValidSession, controllers.Registries.findAll);
 router.post('/registries', controllers.Registries.create);
 router.get('/registries/:id', controllers.Registries.findOne);
 router.delete('/registries/:id', controllers.Registries.delete);
