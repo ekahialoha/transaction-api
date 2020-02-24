@@ -10,15 +10,15 @@ const controllers = require('../controllers')
 // Setup routes for /api/users
 // =============================
 console.log(controllers);
-router.get('/users', controllers.Users.findAllUsers);
+router.get('/users', controllers.Users.findAll);
 
-router.post('/users', controllers.Users.createUser);
+router.post('/users', controllers.Users.create);
 
-router.get('/users/:id', controllers.Users.findOneUser);
+router.get('/users/:id', controllers.Users.findOne);
 
-router.delete('/users/:id', controllers.Users.deleteUser);
+router.delete('/users/:id', controllers.Users.delete);
 
-router.put('/users/:id', controllers.Users.updateUser);
+router.put('/users/:id', controllers.Users.update);
 
 // =========================================
 // Setup reoutes for /api/authentications

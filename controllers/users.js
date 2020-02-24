@@ -2,11 +2,11 @@ const db = require('../models');
 
 module.exports = {
   Users: {
-    findAllUsers: (req, res) => {
+    findAll: (req, res) => {
       db.User.findAll().then(users => res.json(users)).catch(error => res.json(error));
     },
 
-    createUser: (req, res) => {
+    create: (req, res) => {
       db.User.create({
         name: req.body.user.name,
         email: req.body.user.email,
@@ -14,7 +14,7 @@ module.exports = {
       }).then(user => res.json(user)).catch(error => res.json(error));
     },
 
-    findOneUser: (req, res) => {
+    findOne: (req, res) => {
       db.User.findOne({
         where: {
           id: req.params.id
@@ -22,7 +22,7 @@ module.exports = {
       }).then(user => res.json(user)).catch(error => res.json(error));
     },
 
-    deleteUser: (req, res) => {
+    delete: (req, res) => {
       db.User.destroy({
         where: {
           id: req.params.id
@@ -30,7 +30,7 @@ module.exports = {
       }).then(() => res.json({ deleted: true })).catch(error => res.json(error));
     },
 
-    updateUser: (req, res) => {
+    update: (req, res) => {
       db.User.update(req.body.user, {
         where: {
           id: req.params.id
