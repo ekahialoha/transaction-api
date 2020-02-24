@@ -1,41 +1,71 @@
 const db = require('../models');
 
+const fetchUser = require('../helpers/fetch_user.js');
+const resJson = require('../helpers/res_json.js');
+
 module.exports = {
   Users: {
     findAll: (req, res) => {
-      db.User.findAll().then(users => res.json(users)).catch(error => res.json(error));
+      db.User.findAll()
+        .then(users => resJson(res, users))
+        .catch(error => resJson(res, null, 500, error));
     },
 
     create: (req, res) => {
+      const user = req.body.user;
+
       db.User.create({
-        name: req.body.user.name,
-        email: req.body.user.email,
-        password: req.body.user.password
-      }).then(user => res.json(user)).catch(error => res.json(error));
+        name: user.name,
+        email: user.email,
+        password: user.password
+      })
+        .then(result => resJson(res, result))
+        .catch(error => resJson(res, null, 500, error));
     },
 
     findOne: (req, res) => {
-      db.User.findOne({
-        where: {
-          id: req.params.id
-        }
-      }).then(user => res.json(user)).catch(error => res.json(error));
+      const user = fetchUser(req.params.id);
+
+      user.then(result => {
+        resJson(res, result, 200, 'Not Found');
+      });
     },
 
     delete: (req, res) => {
-      db.User.destroy({
-        where: {
-          id: req.params.id
+      const user = fetchUser(req.params.id);
+
+      user.then(result => {
+        if (result === null) {
+          return resJson(res, result, 404, 'Not Found');
         }
-      }).then(() => res.json({ deleted: true })).catch(error => res.json(error));
+
+        result.destroy()
+          .then(() => {
+            resJson(res, {
+              deleted: true
+            });
+          })
+          .catch(error => resJson(res, null, 500, error));
+      });
     },
 
     update: (req, res) => {
-      db.User.update(req.body.user, {
-        where: {
-          id: req.params.id
+      const user = fetchUser(req.params.id);
+
+      user.then(result => {
+        if (result === null) {
+          return resJson(res, result, 404, 'Not Found');
         }
-      }).then(() => res.json({ updated: true })).catch(error => res.json(error));
+
+        result.update(req.body.user)
+          .then(updated => {
+            resJson(res, {
+              updated: true,
+              data: updated
+            });
+          })
+          .catch(error => resJson(error));
+      });
     }
   }
 };
