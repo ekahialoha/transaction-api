@@ -40,10 +40,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Transaction.associate = models => {
     models.Transaction.hasOne(models.User, {
-      foreignKey: 'userId'
+      foreignKey: 'id'
     });
     models.Transaction.belongsTo(models.Registry, {
-      foreignKey: 'registryId'
+      foreignKey: 'id'
     });
   };
   return Transaction;
