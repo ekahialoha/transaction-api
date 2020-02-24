@@ -44,6 +44,20 @@ router.put('/users/:id', (req, res) => {
   }).then(() => res.json({ updated: true })).catch(error => res.json(error));
 });
 
+// =========================================
+// Setup reoutes for /api/authentications
+// =========================================
+router.post('/authentications', (req, res) => {
+  db.User.findOne({
+    where: {
+      email: req.body.authentication.email
+    }
+  }).then(async user => {
+    res.json(await user.validatePassword(req.body.authentication.password));
+  }).catch(error => res.json(error))
+});
+
+
 // ==================================
 // Setup routes for /api/registries
 // ==================================
