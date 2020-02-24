@@ -8,6 +8,7 @@ const controllers = require('../controllers');
 const middleware = require('../middleware');
 
 console.log(middleware);
+// router.use(middleware.forceHeaders);
 
 // =============================
 // Setup routes for /api/users
@@ -18,11 +19,10 @@ router.get('/users/:id', controllers.Users.findOne);
 router.delete('/users/:id', controllers.Users.delete);
 router.put('/users/:id', controllers.Users.update);
 
-// =========================================
-// Setup reoutes for /api/authentications
-// =========================================
+// =================================
+// Setup reoutes for /api/sessions
+// =================================
 router.post('/sessions', controllers.Sessions.create);
-
 
 // ==================================
 // Setup routes for /api/registries
