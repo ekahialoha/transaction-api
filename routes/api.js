@@ -4,45 +4,21 @@
 const express = require('express');
 const router = express.Router();
 const db = require('../models');
+const controllers = require('../controllers')
 
 // =============================
 // Setup routes for /api/users
 // =============================
-router.get('/users', (req, res) => {
-  db.User.findAll().then(users => res.json(users)).catch(error => res.json(error));
-});
+console.log(controllers);
+router.get('/users', controllers.Users.findAllUsers);
 
-router.post('/users', (req, res) => {
-  db.User.create({
-    name: req.body.user.name,
-    email: req.body.user.email,
-    password: req.body.user.password
-  }).then(user => res.json(user)).catch(error => res.json(error));
-});
+router.post('/users', controllers.Users.createUser);
 
-router.get('/users/:id', (req, res) => {
-  db.User.findOne({
-    where: {
-      id: req.params.id
-    }
-  }).then(user => res.json(user)).catch(error => res.json(error));
-});
+router.get('/users/:id', controllers.Users.findOneUser);
 
-router.delete('/users/:id', (req, res) => {
-  db.User.destroy({
-    where: {
-      id: req.params.id
-    }
-  }).then(() => res.json({ deleted: true })).catch(error => res.json(error));
-});
+router.delete('/users/:id', controllers.Users.deleteUser);
 
-router.put('/users/:id', (req, res) => {
-  db.User.update(req.body.user, {
-    where: {
-      id: req.params.id
-    }
-  }).then(() => res.json({ updated: true })).catch(error => res.json(error));
-});
+router.put('/users/:id', controllers.Users.updateUser);
 
 // =========================================
 // Setup reoutes for /api/authentications
