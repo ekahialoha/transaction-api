@@ -50,44 +50,14 @@ router.put('/registries/:id', controllers.Registries.update);
 // =====================================
 // Setup routes for /api/transactions
 // =====================================
-router.get('/transactions', (req, res) => {
-  db.Transaction.findAll()
-    .then(transactions => res.json(transactions))
-    .catch(error => res.json(error));
-});
+router.get('/transactions', controllers.Transactions.findAll);
 
-router.post('/transactions', (req, res) => {
-  db.Transaction.create({
-    description: req.body.transaction.description,
-    userId: req.body.transaction.userId,
-    registryId: req.body.transaction.registryId,
-    type: req.body.transaction.type,
-    value: req.body.transaction.value
-  }).then(transaction => res.json(transaction)).catch(error => res.json(error));
-});
+router.post('/transactions', controllers.Transactions.create);
 
-router.get('/transactions/:id', (req, res) => {
-  db.Transaction.findOne({
-    where: {
-      id: req.params.id
-    }
-  }).then(transaction => res.json(transaction)).catch(error => res.json(error));
-});
+router.get('/transactions/:id', controllers.Transactions.findOne);
 
-router.delete('/transactions/:id', (req, res) => {
-  db.Transaction.destroy({
-    where: {
-      id: req.params.id
-    }
-  }).then(() => res.json({ deleted: true })).catch(error => res.json(error));
-});
+router.delete('/transactions/:id', controllers.Transactions.delete);
 
-router.put('/transactions/:id', (req, res) => {
-  db.Transaction.update(req.body.transaction, {
-    where: {
-      id: req.params.id
-    }
-  }).then(() => res.json({ updated: true })).catch(error => res.json(error));
-});
+router.put('/transactions/:id', controllers.Transactions.update);
 
 module.exports = router;
