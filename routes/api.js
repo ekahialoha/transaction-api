@@ -37,41 +37,15 @@ router.post('/authentications', (req, res) => {
 // ==================================
 // Setup routes for /api/registries
 // ==================================
-router.get('/registries', (req, res) => {
-  db.Registry.findAll().then(registries => res.json(registries)).catch(error => res.json(error));
-});
+router.get('/registries', controllers.Registries.findAll);
 
-router.post('/registries', (req, res) => {
-  db.Registry.create({
-    name: req.body.registry.name,
-    userId: req.body.registry.userId,
-    type: req.body.registry.type
-  }).then(registry => res.json(registry)).catch(error => res.json(error));
-});
+router.post('/registries', controllers.Registries.create);
 
-router.get('/registries/:id', (req, res) => {
-  db.Registry.findOne({
-    where: {
-      id: req.params.id
-    }
-  }).then(registry => res.json(registry)).catch(error => res.json(error));
-});
+router.get('/registries/:id', controllers.Registries.findOne);
 
-router.delete('/registries/:id', (req, res) => {
-  db.Registry.destroy({
-    where: {
-      id: req.params.id
-    }
-  }).then(() => res.json({ deleted:true })).catch(error => res.json(error));
-});
+router.delete('/registries/:id', controllers.Registries.delete);
 
-router.put('/registries/:id', (req, res) => {
-  db.Registry.update(req.body.registry, {
-    where: {
-      id: req.params.id
-    }
-  }).then(() => res.json({ update: true })).catch(error => res.json(error));
-});
+router.put('/registries/:id', controllers.Registries.update);
 
 // =====================================
 // Setup routes for /api/transactions
