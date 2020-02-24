@@ -23,15 +23,7 @@ router.put('/users/:id', controllers.Users.update);
 // =========================================
 // Setup reoutes for /api/authentications
 // =========================================
-router.post('/authentications', (req, res) => {
-  db.User.findOne({
-    where: {
-      email: req.body.authentication.email
-    }
-  }).then(async user => {
-    res.json(await user.validatePassword(req.body.authentication.password));
-  }).catch(error => res.json(error))
-});
+router.post('/sessions', controllers.Sessions.create);
 
 
 // ==================================
