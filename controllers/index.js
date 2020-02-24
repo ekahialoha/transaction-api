@@ -12,6 +12,6 @@ const onlyControllers = allFiles.filter(file => {
   return (file.includes('.') && file.slice(-3) === '.js' && file !== currentFile)
 });
 
-onlyControllers.forEach(file => controllers = Object.assign(controllers, require("./" + file)));
+onlyControllers.forEach(file => controllers = Object.assign(controllers, require('./' + file)));
 
 module.exports = controllers;
