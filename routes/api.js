@@ -21,7 +21,7 @@ router.post('/users', (req, res) => {
 });
 
 router.get('/users/:id', (req, res) => {
-  db.User.findAll({
+  db.User.findOne({
     where: {
       id: req.params.id
     }
@@ -60,7 +60,7 @@ router.post('/registries', (req, res) => {
 });
 
 router.get('/registries/:id', (req, res) => {
-  db.Registry.findAll({
+  db.Registry.findOne({
     where: {
       id: req.params.id
     }
@@ -103,7 +103,7 @@ router.post('/transactions', (req, res) => {
 });
 
 router.get('/transactions/:id', (req, res) => {
-  db.Transaction.findAll({
+  db.Transaction.findOne({
     where: {
       id: req.params.id
     }
