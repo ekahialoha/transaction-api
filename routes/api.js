@@ -27,7 +27,7 @@ router.post('/sessions', controllers.Sessions.create);
 // ==================================
 // Setup routes for /api/registries
 // ==================================
-router.get('/registries', middleware.checkValidSession, controllers.Registries.findAll);
+router.get('/registries', middleware.checkValidToken, controllers.Registries.findAll);
 router.post('/registries', controllers.Registries.create);
 router.get('/registries/:id', controllers.Registries.findOne);
 router.delete('/registries/:id', controllers.Registries.delete);
