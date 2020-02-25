@@ -8,7 +8,7 @@ const controllers = require('../controllers');
 const middleware = require('../middleware');
 
 console.log(middleware);
-// router.use(middleware.forceHeaders);
+router.use(middleware.forceHeaders);
 
 // =============================
 // Setup routes for /api/users
