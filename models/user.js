@@ -1,6 +1,8 @@
 'use strict';
 const bcrypt = require('bcrypt');
 
+const validatePassword = require('../helpers/validate_password')
+
 const hashPassword = async (user) => {
   try {
     const hashedPassword = await bcrypt.hash(user.password, 10);
@@ -40,8 +42,8 @@ module.exports = (sequelize, DataTypes) => {
     });
   };
 
-  User.prototype.validatePassword = async function(password) {
-    return await bcrypt.compare(password, this.password);
+  User.prototype.validatePassword = function(password) {
+    return validatePassword(password, this.password);
   };
 
   User.prototype.toJSON = function() {
