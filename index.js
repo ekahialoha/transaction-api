@@ -3,8 +3,7 @@
 // ===================================
 const dotEnv = require('dotenv').config();
 const express = require('express');
-const apiRoutes = require('./routes/api.js');
-const db = require('./models');
+const apiRoutes = require('./routes/api');
 
 // ====================
 // Simple application

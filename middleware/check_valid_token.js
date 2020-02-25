@@ -21,7 +21,7 @@ module.exports = {
       const token = db.User.findByPk(decoded.userId);
 
       token.then(result => {
-        req.user = JSON.stringify(result);
+        req.user = result.toJSON();
         next();
       });
     });
