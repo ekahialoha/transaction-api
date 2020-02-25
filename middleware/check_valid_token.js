@@ -1,5 +1,5 @@
 module.exports = {
-  checkValidSession: (req, res, next) => {
+  checkValidToken: (req, res, next) => {
     if (req.headers.authorization !== undefined) {
       next();
     } else {
