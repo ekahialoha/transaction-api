@@ -1,7 +1,7 @@
 const db = require('../models');
 
 const fetchRegistry = async id => {
-  const registry = await db.Registry.findByPk(id);
+  const registry = await db.Registry.findByPk(id, { include: db.User});
   return registry;
 };
 

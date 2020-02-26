@@ -1,7 +1,8 @@
 const db = require('../models');
 
-const fetchRegistry = require('../helpers/fetch_registry.js');
-const resJson = require('../helpers/res_json.js');
+const fetchRegistry = require('../helpers/fetch_registry');
+const resJson = require('../helpers/res_json');
+const validateAuthorization = require('../helpers/validate_authorization');
 
 module.exports = {
   Registries: {
@@ -16,7 +17,7 @@ module.exports = {
 
       db.Registry.create({
         name: registry.name,
-        userId: registry.userId,
+        userId: res.user.id,
         type: registry.type
       })
         .then(result => resJson(res, result))
@@ -27,7 +28,14 @@ module.exports = {
       const registry = fetchRegistry(req.params.id);
 
       registry.then(result => {
-        resJson(res, result, 200, 'Not Found');
+        if (result === null) {
+          return resJson(res, result, 404, 'Not Found')
+        }
+
+        if (!validateAuthorization(req.user, result.userId)) {
+          return resJson(res, null, 401, 'Bad Credentials');
+        }
+        resJson(res, result);
       });
     },
 
@@ -37,6 +45,10 @@ module.exports = {
       registry.then(result => {
         if (result === null) {
           return resJson(res, result, 404, 'Not Found');
+        }
+
+        if (!validateAuthorization(req.user, result.userId)) {
+          return resJson(res, null, 401, 'Bad Credentials');
         }
 
         result.destroy()
@@ -55,6 +67,10 @@ module.exports = {
       registry.then(result => {
         if (result === null) {
           return resJson(res, result, 404, 'Not Found');
+        }
+
+        if (!validateAuthorization(req.user, result.userId)) {
+          return resJson(res, null, 401, 'Bad Credentials');
         }
 
         result.update(req.body.registry)
