@@ -1,8 +1,7 @@
-const resJson = (res, result, status = 200, errorMessage = 'Application Error') => {
-  if (result === null) {
-    status = status === 200 ? 404 : status;
+const resJson = (res, result = null, status = 200) => {
+  if (status > 399) {
     result = {
-      error: errorMessage
+      error: (result === null ? 'Application Error' : result)
     };
   }
   res.status(status).json(result);

@@ -10,7 +10,7 @@ module.exports = {
     findAll: (req, res) => {
       db.Transaction.findAll()
         .then(transactions => resJson(res, transactions))
-        .catch(error => resJson(res, null, 500, error));
+        .catch(error => resJson(res, error, 500));
     },
 
     create: (req, res) => {
@@ -20,7 +20,7 @@ module.exports = {
 
       registry.then(result => {
         if (result === null || !validateAuthorization(req.user, result.userId)) {
-          return resJson(res, null, 422, 'Unprocessable Entity');
+          return resJson(res, 'Unprocessable Entity', 422);
         }
 
         db.Transaction.create({
@@ -31,7 +31,7 @@ module.exports = {
           value: transaction.value
         })
           .then(transaction => resJson(res, transaction))
-          .catch(error => resJson(res, null, 422, error));
+          .catch(error => resJson(res, error, 422));
       });
     },
 
@@ -40,11 +40,11 @@ module.exports = {
 
       transaction.then(result => {
         if (result === null) {
-          return resJson(res, result, 404, 'Not Found');
+          return resJson(res, 'Not Found', 404);
         }
 
         if (!validateAuthorization(req.user, result.userId)) {
-          return resJson(res, null, 401, 'Bad Credentials');
+          return resJson(res, 'Bad Credentials', 401);
         }
 
         resJson(res, result);
@@ -56,11 +56,11 @@ module.exports = {
 
       transaction.then(result => {
         if (result === null) {
-          return resJson(res, result, 404, 'Not Found');
+          return resJson(res, 'Not Found', 404);
         }
 
         if (!validateAuthorization(req.user, result.userId)) {
-          return resJson(res, null, 401, 'Bad Credentials');
+          return resJson(res, 'Bad Credentials', 401);
         }
 
         result.destroy()
@@ -69,7 +69,7 @@ module.exports = {
               deleted: true
             });
           })
-          .catch(error => resJson(res, null, 500, error));
+          .catch(error => resJson(res, errror, 500));
       });
     },
 
@@ -78,11 +78,11 @@ module.exports = {
 
       transaction.then(result => {
         if (result === null) {
-          return resJson(res, result, 404, 'Not Found');
+          return resJson(res, 'Not Found', 404);
         }
 
         if (!validateAuthorization(req.user, result.userId)) {
-          return resJson(res, null, 401, 'Bad Credentials');
+          return resJson(res, 'Bad Credentials', 401);
         }
 
         result.update(req.body.transaction)
@@ -92,7 +92,7 @@ module.exports = {
               data: updated
             });
           })
-          .catch(error => resJson(res, null, 422, error));
+          .catch(error => resJson(res, 'Unprocessable Entity', 422));
       });
     }
   }

@@ -13,13 +13,13 @@ module.exports = {
 
       user.then(result => {
         if (result === null) {
-          return resJson(res, result, 401, 'Bad Credentials');
+          return resJson(res, 'Bad Credentials', 401);
         }
 
         result.validatePassword(session.password)
         .then(passwordCheck => {
           if (!passwordCheck) {
-            return resJson(res, null, 401, 'Bad Credentials');
+            return resJson(res, 'Bad Credentials', 401);
           }
 
           const response = {

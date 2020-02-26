@@ -10,7 +10,7 @@ module.exports = {
 
       db.User.findAll()
         .then(users => resJson(res, users))
-        .catch(error => resJson(res, null, 500, error));
+        .catch(error => resJson(res, error, 500));
     },
 
     create: (req, res) => {
@@ -24,7 +24,7 @@ module.exports = {
         role: user.role !== null ? user.role : 0
       })
         .then(result => resJson(res, result))
-        .catch(error => resJson(res, null, 500, error));
+        .catch(error => resJson(res, error, 500));
     },
 
     findOne: (req, res) => {
@@ -32,14 +32,14 @@ module.exports = {
 
       user.then(result => {
         if (result === null) {
-          return resJson(res, result, 404, 'Not Found');
+          return resJson(res, 'Not Found', 404);
         }
 
         if(!validateAuthorization(req.user, result.id)) {
-          return resJson(res, null, 401, 'Bad Credentials');
+          return resJson(res, 'Bad Credentials', 401);
         }
 
-        resJson(res, result, 200, 'Not Found');
+        resJson(res, result, 200);
       });
     },
 
@@ -48,11 +48,11 @@ module.exports = {
 
       user.then(result => {
         if (result === null) {
-          return resJson(res, result, 404, 'Not Found');
+          return resJson(res, 'Not Found', 404);
         }
 
-        if(!validateAuthorization(req.user, result.id)) {
-          return resJson(res, null, 401, 'Bad Credentials');
+        if(!validateAuthorization(req.user)) {
+          return resJson(res, 'Bad Credentials', 401);
         }
 
         result.destroy()
@@ -61,7 +61,7 @@ module.exports = {
               deleted: true
             });
           })
-          .catch(error => resJson(res, null, 500, error));
+          .catch(error => resJson(res, error, 500));
       });
     },
 
@@ -70,11 +70,11 @@ module.exports = {
 
       user.then(result => {
         if (result === null) {
-          return resJson(res, result, 404, 'Not Found');
+          return resJson(res, 'Not Found', 404);
         }
 
         if(!validateAuthorization(req.user, result.id)) {
-          return resJson(res, null, 401, 'Bad Credentials');
+          return resJson(res, 'Bad Credentials', 401);
         }
 
         result.update(req.body.user)
@@ -84,7 +84,7 @@ module.exports = {
               data: updated
             });
           })
-          .catch(error => resJson(res, null, 422, error));
+          .catch(error => resJson(res, 'Unprocessable Entity', 422));
       });
     }
   }
