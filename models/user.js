@@ -4,6 +4,11 @@ const bcrypt = require('bcrypt');
 const validatePassword = require('../helpers/validate_password');
 const hashPassword = require('../helpers/hash_password');
 
+const rolesENUM = [
+  'User',
+  'Admin'
+];
+
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
     name: {
@@ -21,6 +26,28 @@ module.exports = (sequelize, DataTypes) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    isUser: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return this.getDataValue('role') === 0;
+      },
+      set() {
+        throw new ('Unable to set isUser directly');
+      }
+    },
+    isAdmin: {
+      type: DataTypes.VIRTUAL,
+      get() {
+        return this.getDataValue('role') === 1;
+      },
+      set() {
+        throw new ('Unable to set isAdmin directly');
+      }
+    },
+    role: {
+      type: DataTypes.INTEGER,
+      defaultValue: 0
+    }
   }, {
     hooks: {
       beforeCreate: hashPassword,
@@ -43,6 +70,8 @@ module.exports = (sequelize, DataTypes) => {
     delete user.password;
     return user;
   };
+
+  // User.prototype.
 
   return User;
 };
