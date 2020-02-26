@@ -43,7 +43,7 @@ module.exports = (sequelize, DataTypes) => {
       foreignKey: 'id'
     });
     models.Transaction.belongsTo(models.Registry, {
-      foreignKey: 'id'
+      foreignKey: 'registryId'
     });
   };
   return Transaction;

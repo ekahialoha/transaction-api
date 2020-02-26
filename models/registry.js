@@ -7,7 +7,10 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   Registry.associate = models => {
     models.Registry.belongsTo(models.User, {
-      foreignKey: 'id'
+      foreignKey: 'userId'
+    });
+    models.Registry.hasMany(models.Transaction, {
+      foreignKey: 'registryId'
     });
   };
   return Registry;
