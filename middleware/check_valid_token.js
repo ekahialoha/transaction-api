@@ -8,14 +8,12 @@ module.exports = {
     const token = req.headers['authorization'] ? req.headers['authorization'].split(' ') : [];
 
     if (token[0] !== 'Bearer' || token[1] === undefined) {
-      resJson(res, null, 401, 'Bad Credentials');
-      return;
+      return resJson(res, null, 401, 'Bad Credentials');
     }
 
     jwt.verify(token[1], process.env.SECRET_KEY, (error, decoded) => {
       if (error || !decoded) {
-        resJson(res, null, 401, 'Bad Credentials');
-        return;
+        return resJson(res, null, 401, 'Bad Credentials');
       }
 
       const token = db.User.findByPk(decoded.userId);
