@@ -1,7 +1,9 @@
 const db = require('../models');
 
 const fetchTransaction = require('../helpers/fetch_transaction');
+const fetchRegistry = require('../helpers/fetch_registry');
 const resJson = require('../helpers/res_json');
+const validateAuthorization = require('../helpers/validate_authorization');
 
 module.exports = {
   Transactions: {
@@ -14,22 +16,38 @@ module.exports = {
     create: (req, res) => {
       const transaction = req.body.transaction;
 
-      db.Transaction.create({
-        description: transaction.description,
-        userId: transaction.userId,
-        registryId: transaction.registryId,
-        type: transaction.type,
-        value: transaction.value
-      })
-        .then(transaction => resJson(res, transaction))
-        .catch(error => resJson(res, null, 422, error));
+      const registry = fetchRegistry(transaction.registryId);
+
+      registry.then(result => {
+        if (result === null || !validateAuthorization(req.user, result.userId)) {
+          return resJson(res, null, 422, 'Unprocessable Entity');
+        }
+
+        db.Transaction.create({
+          description: transaction.description,
+          userId: transaction.userId,
+          registryId: transaction.registryId,
+          type: transaction.type,
+          value: transaction.value
+        })
+          .then(transaction => resJson(res, transaction))
+          .catch(error => resJson(res, null, 422, error));
+      });
     },
 
     findOne: (req, res) => {
       const transaction = fetchTransaction(req.params.id);
 
       transaction.then(result => {
-        resJson(res, result, 200, 'Not Found');
+        if (result === null) {
+          return resJson(res, result, 404, 'Not Found');
+        }
+
+        if (!validateAuthorization(req.user, result.userId)) {
+          return resJson(res, null, 401, 'Bad Credentials');
+        }
+
+        resJson(res, result);
       });
     },
 
@@ -39,6 +57,10 @@ module.exports = {
       transaction.then(result => {
         if (result === null) {
           return resJson(res, result, 404, 'Not Found');
+        }
+
+        if (!validateAuthorization(req.user, result.userId)) {
+          return resJson(res, null, 401, 'Bad Credentials');
         }
 
         result.destroy()
@@ -57,6 +79,10 @@ module.exports = {
       transaction.then(result => {
         if (result === null) {
           return resJson(res, result, 404, 'Not Found');
+        }
+
+        if (!validateAuthorization(req.user, result.userId)) {
+          return resJson(res, null, 401, 'Bad Credentials');
         }
 
         result.update(req.body.transaction)
