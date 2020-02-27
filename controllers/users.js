@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const db = require('../models');
 
 const fetchUser = require('../helpers/fetch_user');
@@ -7,8 +8,26 @@ const validateAuthorization = require('../helpers/validate_authorization')
 module.exports = {
   Users: {
     findAll: (req, res) => {
+      const options = { where: {}};
+      const query = req.query;
+      if (req.user.isUser || req.user.isAdmin && query.query) {
+        if (!query.query) {
+          return resJson(res, 'Query undefined', 400);
+        }
+        const searchString = `%${query.query}%`;
+        options.where = {
+          [Op.or]: {
+            name: {
+              [Op.like]: searchString
+            },
+            email: {
+              [Op.like]: searchString
+            }
+          }
+        };
+      }
 
-      db.User.findAll()
+      db.User.findAll(options)
         .then(users => resJson(res, users))
         .catch(error => resJson(res, error, 500));
     },
@@ -39,7 +58,7 @@ module.exports = {
           return resJson(res, 'Bad Credentials', 401);
         }
 
-        resJson(res, result, 200);
+        resJson(res, result);
       });
     },
 
