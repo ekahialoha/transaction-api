@@ -1,3 +1,4 @@
+const { Op } = require("sequelize");
 const db = require('../models');
 
 const fetchTransaction = require('../helpers/fetch_transaction');
@@ -8,7 +9,36 @@ const validateAuthorization = require('../helpers/validate_authorization');
 module.exports = {
   Transactions: {
     findAll: (req, res) => {
-      db.Transaction.findAll()
+      const options = { where: {} };
+      const query = req.query;
+      if (req.user.isAdmin && query.useAdmin !== undefined && query.useAdmin === 'true') {
+        if (query.userId !== undefined) {
+          options.where.userId = query.userId;
+        }
+      } else {
+        options.where.userId = req.user.id;
+      }
+
+      if (query.startDate && query.endDate) {
+        options.where.createdAt = {
+          [Op.and]: [{
+              [Op.gte]: query.startDate
+            },
+            {
+              [Op.lt]: query.endDate
+            }
+          ]
+        };
+      }
+      if (query.type) {
+        options.where.type = query.type;
+      }
+
+      if (query.registryId) {
+        options.where.registryId = query.registryId;
+      }
+
+      db.Transaction.findAll(options)
         .then(transactions => resJson(res, transactions))
         .catch(error => resJson(res, error, 500));
     },
