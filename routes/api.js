@@ -1,14 +1,32 @@
 // ===================================
 // Application Dependencies/Includes
 // ===================================
+const dotEnv = require('dotenv').config();
 const express = require('express');
 const router = express.Router();
 const db = require('../models');
 const controllers = require('../controllers');
 const middleware = require('../middleware');
+const cors = require('cors');
 
 console.log(middleware);
 router.use(middleware.forceHeaders);
+// ============================
+// CORS - set allowed Origins
+// ============================
+let whitelist = process.env.CORS_WHITELIST;
+if (!whitelist.isArray) {
+  whitelist = whitelist.split(',');
+}
+router.use(cors({
+  origin: (origin, callback) => {
+    if (origin && !whitelist.includes(origin)) {
+      const message = "The CORS policy for this origin doesn't allow access from the particular origin.";
+      return callback(message, false);
+    }
+    return callback(null, true);
+  }
+}));
 
 // =================================
 // Setup route for POST /api/users
