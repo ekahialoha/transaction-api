@@ -26,7 +26,7 @@ module.exports = {
             user: result.toJSON()
           };
 
-          jwt.sign({ userId: result.id }, process.env.SECRET_KEY, {
+          jwt.sign(response, process.env.SECRET_KEY, {
             expiresIn: process.env.SECRET_KEY_EXPIRES
           },(error, token) => {
             response.token = token;

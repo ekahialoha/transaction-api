@@ -16,7 +16,7 @@ module.exports = {
         return resJson(res, null, 401, 'Bad Credentials');
       }
 
-      const token = db.User.findByPk(decoded.userId);
+      const token = db.User.findByPk(decoded.user.id);
 
       token.then(result => {
         req.user = result.toJSON();
