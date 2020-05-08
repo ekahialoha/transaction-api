@@ -10,7 +10,6 @@ const middleware = require('../middleware');
 const cors = require('cors');
 
 console.log(middleware);
-router.use(middleware.forceHeaders);
 // ============================
 // CORS - set allowed Origins
 // ============================
@@ -27,6 +26,7 @@ router.use(cors({
     return callback(null, true);
   }
 }));
+// router.use(middleware.forceHeaders);
 
 // =================================
 // Setup route for POST /api/users
@@ -49,6 +49,12 @@ router.get('/users', controllers.Users.findAll);
 router.get('/users/:id', controllers.Users.findOne);
 router.delete('/users/:id', controllers.Users.delete);
 router.put('/users/:id', controllers.Users.update);
+
+// ==================================
+// Setup routes for /api/accounts
+// ==================================
+router.get('/accounts', controllers.Accounts.findAll);
+router.post('/accounts', controllers.Accounts.create);
 
 // ==================================
 // Setup routes for /api/registries
