@@ -40,7 +40,7 @@ module.exports = {
         name: user.name,
         email: user.email,
         password: user.password,
-        role: user.role !== null ? user.role : 0
+        role: role !== null ? role : 0
       })
         .then(result => resJson(res, result))
         .catch(error => resJson(res, error, 500));
