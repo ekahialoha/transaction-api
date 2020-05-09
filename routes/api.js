@@ -55,6 +55,9 @@ router.put('/users/:id', controllers.Users.update);
 // ==================================
 router.get('/accounts', controllers.Accounts.findAll);
 router.post('/accounts', controllers.Accounts.create);
+router.get('/accounts/:id', controllers.Accounts.findOne);
+router.delete('/accounts/:id', controllers.Accounts.delete);
+router.put('/accounts/:id', controllers.Accounts.update);
 
 // ==================================
 // Setup routes for /api/registries

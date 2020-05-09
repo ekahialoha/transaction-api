@@ -17,7 +17,6 @@ module.exports = {
       }
 
       db.Account.findAll(options)
-        .then(result => result.User.toJSON())
         .then(accounts => resJson(res, accounts))
         .catch(error => resJson(res, error, 500));
     },
@@ -25,16 +24,72 @@ module.exports = {
     create: (req, res) => {
       const account = req.body.account;
 
-      if (!validateAuthorization(req.user)) {
-        return resJson(res, 'Bad Credentials', 401);
-      }
-
       db.Account.create({
         name: account.name,
         userId: req.user.id
       })
         .then(result => resJson(res, result))
         .catch(error => resJson(res, error, 500));
+    },
+
+    findOne: (req, res) => {
+      const account = fetchAccount(req.params.id);
+
+      account.then(result => {
+        if (result === null) {
+          return resJson(res, 'Not Found', 404)
+        }
+
+        if (!validateAuthorization(req.user, result.userId)) {
+          return resJson(res, 'Bad Credentials', 401);
+        }
+        resJson(res, result);
+      });
+    },
+
+    delete: (req, res) => {
+      const account = fetchAccount(req.params.id);
+
+      account.then(result => {
+        if (result === null) {
+          return resJson(res, 'Not Found', 404);
+        }
+
+        if (!validateAuthorization(req.user, result.userId)) {
+          return resJson(res, 'Bad Credentials', 401);
+        }
+
+        result.destroy()
+          .then(() => {
+            resJson(res, {
+              deleted: true
+            });
+          })
+          .catch(error => resJson(res, error, 500));
+      });
+    },
+
+    update: (req, res) => {
+      const account = fetchAccount(req.params.id);
+
+      account.then(result => {
+        if (result === null) {
+          return resJson(res, 'Not Found', 404);
+        }
+
+        if (!validateAuthorization(req.user, result.userId)) {
+          return resJson(res, 'Bad Credentials', 401);
+        }
+
+        result.update(req.body.account)
+          .then(updated => {
+            resJson(res, {
+                update: true,
+                data: updated
+            });
+          })
+          .catch(error => resJson(res, 'Unprocessable Entity', 422));
+      });
     }
   }
 };

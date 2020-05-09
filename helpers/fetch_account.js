@@ -1,7 +1,7 @@
 const db = require('../models');
 
 const fetchAccount = async id => {
-  const account = await db.Account.findByPk(id, { include: db.User });
+  const account = await db.Account.findByPk(id);
 
   return account;
 };
