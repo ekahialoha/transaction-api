@@ -7,18 +7,18 @@ const validateAuthorization = require('../helpers/validate_authorization');
 module.exports = {
   Registries: {
     findAll: (req, res) => {
-      const options = { where: {} };
+      const options = { where: { Account: {} } };
       if (req.user.isAdmin && req.query.useAdmin !== undefined && req.query.useAdmin === 'true') {
         if (req.query.userId !== undefined) {
-          options.where.userId = req.query.userId;
+          options.where.Account.userId = req.query.userId;
         }
       } else {
-        options.where.userId = req.user.id;
+        options.where.Account.userId = req.user.id;
       }
 
       db.Registry.findAll(options)
         .then(registries => resJson(res, registries))
-        .catch(error => resJson(res, error, 50));
+        .catch(error => resJson(res, error, 500));
     },
 
     create: (req, res) => {
@@ -26,7 +26,7 @@ module.exports = {
 
       db.Registry.create({
         name: registry.name,
-        userId: res.user.id,
+        accountId: registry.accountId,
         type: registry.type
       })
         .then(result => resJson(res, result))
