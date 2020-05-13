@@ -32,7 +32,7 @@ module.exports = {
             response.token = token;
             resJson(res, {
               successful: true,
-              data: response
+              session: response
             });
           });
         });

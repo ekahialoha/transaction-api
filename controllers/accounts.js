@@ -1,42 +1,41 @@
 const db = require('../models');
 
-const fetchRegistry = require('../helpers/fetch_registry');
+const fetchAccount = require('../helpers/fetch_account');
 const resJson = require('../helpers/res_json');
 const validateAuthorization = require('../helpers/validate_authorization');
 
 module.exports = {
-  Registries: {
+  Accounts: {
     findAll: (req, res) => {
-      const options = { where: { Account: {} } };
+      const options = { where: {} };
       if (req.user.isAdmin && req.query.useAdmin !== undefined && req.query.useAdmin === 'true') {
         if (req.query.userId !== undefined) {
-          options.where.Account.userId = req.query.userId;
+          options.where.userId = req.query.userId;
         }
       } else {
-        options.where.Account.userId = req.user.id;
+        options.where.userId = req.user.id;
       }
 
-      db.Registry.findAll(options)
-        .then(registries => resJson(res, registries))
+      db.Account.findAll(options)
+        .then(accounts => resJson(res, accounts))
         .catch(error => resJson(res, error, 500));
     },
 
     create: (req, res) => {
-      const registry = req.body.registry;
+      const account = req.body.account;
 
-      db.Registry.create({
-        name: registry.name,
-        accountId: registry.accountId,
-        type: registry.type
+      db.Account.create({
+        name: account.name,
+        userId: req.user.id
       })
         .then(result => resJson(res, result))
         .catch(error => resJson(res, error, 500));
     },
 
     findOne: (req, res) => {
-      const registry = fetchRegistry(req.params.id);
+      const account = fetchAccount(req.params.id);
 
-      registry.then(result => {
+      account.then(result => {
         if (result === null) {
           return resJson(res, 'Not Found', 404)
         }
@@ -49,9 +48,9 @@ module.exports = {
     },
 
     delete: (req, res) => {
-      const registry = fetchRegistry(req.params.id);
+      const account = fetchAccount(req.params.id);
 
-      registry.then(result => {
+      account.then(result => {
         if (result === null) {
           return resJson(res, 'Not Found', 404);
         }
@@ -71,9 +70,9 @@ module.exports = {
     },
 
     update: (req, res) => {
-      const registry = fetchRegistry(req.params.id);
+      const account = fetchAccount(req.params.id);
 
-      registry.then(result => {
+      account.then(result => {
         if (result === null) {
           return resJson(res, 'Not Found', 404);
         }
@@ -82,7 +81,7 @@ module.exports = {
           return resJson(res, 'Bad Credentials', 401);
         }
 
-        result.update(req.body.registry)
+        result.update(req.body.account)
           .then(updated => {
             resJson(res, {
                 update: true,
