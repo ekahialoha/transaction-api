@@ -1,15 +1,15 @@
-'use strict';
+
 module.exports = (sequelize, DataTypes) => {
   const Account = sequelize.define('Account', {
     name: DataTypes.STRING,
-    userId: DataTypes.INTEGER
+    userId: DataTypes.INTEGER,
   }, {});
-  Account.associate = models => {
+  Account.associate = (models) => {
     models.Account.belongsTo(models.User, {
-      foreignKey: 'userId'
+      foreignKey: 'userId',
     });
     models.Account.hasMany(models.Registry, {
-      foreignKey: 'accountId'
+      foreignKey: 'accountId',
     });
   };
   return Account;

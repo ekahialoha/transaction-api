@@ -7,11 +7,11 @@ const fetchUser = (id, searchBy = 'id') => {
   } else {
     user = db.User.findOne({
       where: {
-        email: id
-      }
+        email: id,
+      },
     });
   }
   return user;
-}
+};
 
 module.exports = fetchUser;

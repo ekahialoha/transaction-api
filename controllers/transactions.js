@@ -1,4 +1,4 @@
-const { Op } = require("sequelize");
+const { Op } = require('sequelize');
 const db = require('../models');
 
 const fetchTransaction = require('../helpers/fetch_transaction');
@@ -10,7 +10,7 @@ module.exports = {
   Transactions: {
     findAll: (req, res) => {
       const options = { where: {} };
-      const query = req.query;
+      const { query } = req;
       if (req.user.isAdmin && query.useAdmin !== undefined && query.useAdmin === 'true') {
         if (query.userId !== undefined) {
           options.where.userId = query.userId;
@@ -22,12 +22,12 @@ module.exports = {
       if (query.startDate && query.endDate) {
         options.where.createdAt = {
           [Op.and]: [{
-              [Op.gte]: query.startDate
-            },
-            {
-              [Op.lt]: query.endDate
-            }
-          ]
+            [Op.gte]: query.startDate,
+          },
+          {
+            [Op.lt]: query.endDate,
+          },
+          ],
         };
       }
       if (query.type) {
@@ -39,16 +39,16 @@ module.exports = {
       }
 
       db.Transaction.findAll(options)
-        .then(transactions => resJson(res, transactions))
-        .catch(error => resJson(res, error, 500));
+        .then((transactions) => resJson(res, transactions))
+        .catch((error) => resJson(res, error, 500));
     },
 
     create: (req, res) => {
-      const transaction = req.body.transaction;
+      const { transaction } = req.body;
 
       const registry = fetchRegistry(transaction.registryId);
 
-      registry.then(result => {
+      registry.then((result) => {
         if (result === null || !validateAuthorization(req.user, result.userId)) {
           return resJson(res, 'Unprocessable Entity', 422);
         }
@@ -58,17 +58,17 @@ module.exports = {
           userId: transaction.userId,
           registryId: transaction.registryId,
           type: transaction.type,
-          value: transaction.value
+          value: transaction.value,
         })
-          .then(transaction => resJson(res, transaction))
-          .catch(error => resJson(res, error, 422));
+          .then((transaction) => resJson(res, transaction))
+          .catch((error) => resJson(res, error, 422));
       });
     },
 
     findOne: (req, res) => {
       const transaction = fetchTransaction(req.params.id);
 
-      transaction.then(result => {
+      transaction.then((result) => {
         if (result === null) {
           return resJson(res, 'Not Found', 404);
         }
@@ -84,7 +84,7 @@ module.exports = {
     delete: (req, res) => {
       const transaction = fetchTransaction(req.params.id);
 
-      transaction.then(result => {
+      transaction.then((result) => {
         if (result === null) {
           return resJson(res, 'Not Found', 404);
         }
@@ -96,17 +96,17 @@ module.exports = {
         result.destroy()
           .then(() => {
             resJson(res, {
-              deleted: true
+              deleted: true,
             });
           })
-          .catch(error => resJson(res, errror, 500));
+          .catch((error) => resJson(res, errror, 500));
       });
     },
 
     update: (req, res) => {
       const transaction = fetchTransaction(req.params.id);
 
-      transaction.then(result => {
+      transaction.then((result) => {
         if (result === null) {
           return resJson(res, 'Not Found', 404);
         }
@@ -116,14 +116,14 @@ module.exports = {
         }
 
         result.update(req.body.transaction)
-          .then(updated => {
+          .then((updated) => {
             resJson(res, {
               updated: true,
-              data: updated
+              data: updated,
             });
           })
-          .catch(error => resJson(res, 'Unprocessable Entity', 422));
+          .catch((error) => resJson(res, 'Unprocessable Entity', 422));
       });
-    }
-  }
+    },
+  },
 };

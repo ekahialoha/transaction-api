@@ -17,27 +17,27 @@ module.exports = {
       }
 
       db.Account.findAll(options)
-        .then(accounts => resJson(res, accounts))
-        .catch(error => resJson(res, error, 500));
+        .then((accounts) => resJson(res, accounts))
+        .catch((error) => resJson(res, error, 500));
     },
 
     create: (req, res) => {
-      const account = req.body.account;
+      const { account } = req.body;
 
       db.Account.create({
         name: account.name,
-        userId: req.user.id
+        userId: req.user.id,
       })
-        .then(result => resJson(res, result))
-        .catch(error => resJson(res, error, 500));
+        .then((result) => resJson(res, result))
+        .catch((error) => resJson(res, error, 500));
     },
 
     findOne: (req, res) => {
       const account = fetchAccount(req.params.id);
 
-      account.then(result => {
+      account.then((result) => {
         if (result === null) {
-          return resJson(res, 'Not Found', 404)
+          return resJson(res, 'Not Found', 404);
         }
 
         if (!validateAuthorization(req.user, result.userId)) {
@@ -50,7 +50,7 @@ module.exports = {
     delete: (req, res) => {
       const account = fetchAccount(req.params.id);
 
-      account.then(result => {
+      account.then((result) => {
         if (result === null) {
           return resJson(res, 'Not Found', 404);
         }
@@ -62,17 +62,17 @@ module.exports = {
         result.destroy()
           .then(() => {
             resJson(res, {
-              deleted: true
+              deleted: true,
             });
           })
-          .catch(error => resJson(res, error, 500));
+          .catch((error) => resJson(res, error, 500));
       });
     },
 
     update: (req, res) => {
       const account = fetchAccount(req.params.id);
 
-      account.then(result => {
+      account.then((result) => {
         if (result === null) {
           return resJson(res, 'Not Found', 404);
         }
@@ -82,14 +82,14 @@ module.exports = {
         }
 
         result.update(req.body.account)
-          .then(updated => {
+          .then((updated) => {
             resJson(res, {
-                update: true,
-                data: updated
+              update: true,
+              data: updated,
             });
           })
-          .catch(error => resJson(res, 'Unprocessable Entity', 422));
+          .catch((error) => resJson(res, 'Unprocessable Entity', 422));
       });
-    }
-  }
+    },
+  },
 };

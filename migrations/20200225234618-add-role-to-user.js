@@ -1,13 +1,8 @@
-'use strict';
 
 module.exports = {
-  up: (queryInterface, Sequelize) => {
-    return queryInterface.addColumn('Users', 'role', {
-      type: Sequelize.INTEGER
-    });
-  },
+  up: (queryInterface, Sequelize) => queryInterface.addColumn('Users', 'role', {
+    type: Sequelize.INTEGER,
+  }),
 
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.removeColumn('Users', 'role');
-  }
+  down: (queryInterface, Sequelize) => queryInterface.removeColumn('Users', 'role'),
 };

@@ -1,4 +1,4 @@
-'use strict';
+
 const bcrypt = require('bcrypt');
 
 const validatePassword = require('../helpers/validate_password');
@@ -6,7 +6,7 @@ const hashPassword = require('../helpers/hash_password');
 
 const rolesENUM = [
   'User',
-  'Admin'
+  'Admin',
 ];
 
 module.exports = (sequelize, DataTypes) => {
@@ -14,17 +14,17 @@ module.exports = (sequelize, DataTypes) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-      validates: { len: [4, 150] }
+      validates: { len: [4, 150] },
     },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
       unique: true,
-      validates: { isEmail: true }
+      validates: { isEmail: true },
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
     },
     isUser: {
       type: DataTypes.VIRTUAL,
@@ -32,8 +32,8 @@ module.exports = (sequelize, DataTypes) => {
         return this.getDataValue('role') === 0;
       },
       set() {
-        throw new ('Unable to set isUser directly');
-      }
+        throw new ('Unable to set isUser directly')();
+      },
     },
     isAdmin: {
       type: DataTypes.VIRTUAL,
@@ -41,32 +41,32 @@ module.exports = (sequelize, DataTypes) => {
         return this.getDataValue('role') === 1;
       },
       set() {
-        throw new ('Unable to set isAdmin directly');
-      }
+        throw new ('Unable to set isAdmin directly')();
+      },
     },
     role: {
       type: DataTypes.INTEGER,
-      defaultValue: 0
-    }
+      defaultValue: 0,
+    },
   }, {
     hooks: {
       beforeCreate: hashPassword,
-      beforeUpdate: hashPassword
-    }
+      beforeUpdate: hashPassword,
+    },
   });
 
-  User.associate = models => {
+  User.associate = (models) => {
     models.User.hasMany(models.Account, {
-      foreignKey: 'userId'
+      foreignKey: 'userId',
     });
   };
 
-  User.prototype.validatePassword = function(password) {
+  User.prototype.validatePassword = function (password) {
     return validatePassword(password, this.password);
   };
 
-  User.prototype.toJSON = function() {
-    const user = Object.assign({}, this.get());
+  User.prototype.toJSON = function () {
+    const user = { ...this.get() };
     delete user.password;
     return user;
   };
