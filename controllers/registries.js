@@ -17,28 +17,28 @@ module.exports = {
       }
 
       db.Registry.findAll(options)
-        .then(registries => resJson(res, registries))
-        .catch(error => resJson(res, error, 500));
+        .then((registries) => resJson(res, registries))
+        .catch((error) => resJson(res, error, 500));
     },
 
     create: (req, res) => {
-      const registry = req.body.registry;
+      const { registry } = req.body;
 
       db.Registry.create({
         name: registry.name,
         accountId: registry.accountId,
-        type: registry.type
+        type: registry.type,
       })
-        .then(result => resJson(res, result))
-        .catch(error => resJson(res, error, 500));
+        .then((result) => resJson(res, result))
+        .catch((error) => resJson(res, error, 500));
     },
 
     findOne: (req, res) => {
       const registry = fetchRegistry(req.params.id);
 
-      registry.then(result => {
+      registry.then((result) => {
         if (result === null) {
-          return resJson(res, 'Not Found', 404)
+          return resJson(res, 'Not Found', 404);
         }
 
         if (!validateAuthorization(req.user, result.userId)) {
@@ -51,7 +51,7 @@ module.exports = {
     delete: (req, res) => {
       const registry = fetchRegistry(req.params.id);
 
-      registry.then(result => {
+      registry.then((result) => {
         if (result === null) {
           return resJson(res, 'Not Found', 404);
         }
@@ -63,17 +63,17 @@ module.exports = {
         result.destroy()
           .then(() => {
             resJson(res, {
-              deleted: true
+              deleted: true,
             });
           })
-          .catch(error => resJson(res, error, 500));
+          .catch((error) => resJson(res, error, 500));
       });
     },
 
     update: (req, res) => {
       const registry = fetchRegistry(req.params.id);
 
-      registry.then(result => {
+      registry.then((result) => {
         if (result === null) {
           return resJson(res, 'Not Found', 404);
         }
@@ -83,14 +83,14 @@ module.exports = {
         }
 
         result.update(req.body.registry)
-          .then(updated => {
+          .then((updated) => {
             resJson(res, {
-                update: true,
-                data: updated
+              update: true,
+              data: updated,
             });
           })
-          .catch(error => resJson(res, 'Unprocessable Entity', 422));
+          .catch((error) => resJson(res, 'Unprocessable Entity', 422));
       });
-    }
-  }
+    },
+  },
 };

@@ -3,11 +3,12 @@
 // ===================================
 const dotEnv = require('dotenv').config();
 const express = require('express');
+
 const router = express.Router();
+const cors = require('cors');
 const db = require('../models');
 const controllers = require('../controllers');
 const middleware = require('../middleware');
-const cors = require('cors');
 
 console.log(middleware);
 // ============================
@@ -24,7 +25,7 @@ router.use(cors({
       return callback(message, false);
     }
     return callback(null, true);
-  }
+  },
 }));
 // router.use(middleware.forceHeaders);
 

@@ -8,10 +8,8 @@ let middleware = {};
 
 const allFiles = fs.readdirSync(middlewarePath);
 
-const onlyMiddleware = allFiles.filter(file => {
-  return (file.includes('.') && file.slice(-3) === '.js' && file !== currentFile)
-});
+const onlyMiddleware = allFiles.filter((file) => (file.includes('.') && file.slice(-3) === '.js' && file !== currentFile));
 
-onlyMiddleware.forEach(file => middleware = Object.assign(middleware, require('./' + file)));
+onlyMiddleware.forEach((file) => middleware = Object.assign(middleware, require(`./${file}`)));
 
 module.exports = middleware;
